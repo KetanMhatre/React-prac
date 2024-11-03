@@ -118,7 +118,7 @@ function WhatsappTemplates() {
       }
       return variable;
     });
-    setBodyVariables(updatedVariables); // Update state with modified array
+    setBodyVariables(updatedVariables);
   };
 
   const [websitesURL, setWebsitesURL] = useState([]);
@@ -174,14 +174,11 @@ function WhatsappTemplates() {
   };
 
   const handleSubmit = (e) => {
-    
     e.preventDefault();
     console.log(userData);
     console.log(websitesURL);
     console.log(phoneNumbers);
     console.log(quickReplies);
-    
-    
   };
 
   return (

@@ -3,68 +3,53 @@ import { Card } from 'react-bootstrap';
 import { IoMdTrash } from 'react-icons/io';
 import { Input, InputGroup, InputGroupText } from 'reactstrap';
 
-function Buttons() {
+function OptimizedButtons() {
   const [replyData, setReplyData] = useState([]);
   const [phoneData, setPhoneData] = useState([]);
+  const [emailData, setEmailData] = useState([]);
 
   const [clickCounts, setClickCounts] = useState({
     reply: 0,
     phone: 0,
+    email: 0,
   });
   const [maxClicks, setMaxClick] = useState({
     reply: 3,
     phone: 5,
+    email: 4,
   });
+
+  const dataMap = {
+    reply: { data: replyData, setData: setReplyData },
+    phone: { data: phoneData, setData: setPhoneData },
+    email: { data: emailData, setData: setEmailData },
+  };
 
   const handleButtonClick = (type, max) => {
     if (clickCounts[type] < max) {
-      if (type === 'reply') {
-        const newId = replyData.length;
-        const data = { id: newId, value: '' };
-        setReplyData((prevData) => [...prevData, data]);
-      } else if (type === 'phone') {
-        const newId = phoneData.length;
-        const data = { id: newId, value: '' };
-        setPhoneData((prevData) => [...prevData, data]);
-      }
+      const newId = dataMap[type].data.length;
+      const data = { id: newId, value: '' };
+
+      dataMap[type].setData((prevData) => [...prevData, data]);
+      setClickCounts({ ...clickCounts, [type]: clickCounts[type] + 1 });
     }
-    setClickCounts({ ...clickCounts, [type]: clickCounts[type] + 1 });
   };
 
   const handleChange = (type, id, value) => {
-    if (type === 'reply') {
-      const updatedReplyData = replyData.map((data) => {
-        if (data.id === id) {
-          return { ...data, value: value };
-        }
-        return data;
-      });
-      setReplyData(updatedReplyData);
-    } else if (type === 'phone') {
-      const updatePhoneData = phoneData.map((data) => {
-        if (data.id === id) {
-          return { ...data, value: value };
-        }
-        return data;
-      });
-      setPhoneData(updatePhoneData);
-    }
+    const { data, setData } = dataMap[type];
+    const updatedData = data.map((item) =>
+      item.id === id ? { ...item, value } : item
+    );
+    setData(updatedData);
   };
 
   const handleRemoveData = (type, index) => {
-    if (type === 'reply') {
-      const updatedReplyData = replyData
-        .filter((data) => data.id !== index)
-        .map((data, index) => ({ ...data, id: index }));
-      setReplyData(updatedReplyData);
-      setClickCounts({ ...clickCounts, reply: updatedReplyData.length });
-    } else if (type === 'phone') {
-      const updatePhoneData = phoneData
-        .filter((data) => data.id !== index)
-        .map((data, index) => ({ ...data, id: index }));
-      setPhoneData(updatePhoneData);
-      setClickCounts({ ...clickCounts, phone: updatePhoneData.length });
-    }
+    const { data, setData } = dataMap[type];
+    const updatedData = data
+      .filter((item) => item.id !== index)
+      .map((item, id) => ({ ...item, id }));
+    setData(updatedData);
+    setClickCounts({ ...clickCounts, [type]: updatedData.length });
   };
 
   return (
@@ -127,9 +112,36 @@ function Buttons() {
             </div>
           );
         })}
+        <button
+          className='btn btn-primary'
+          onClick={() => {
+            handleButtonClick('email', maxClicks.email);
+          }}
+          disabled={clickCounts.email >= maxClicks.email}
+        >
+          email
+        </button>
+        {emailData.map((data, index) => {
+          return (
+            <div key={index}>
+              <InputGroup>
+                <InputGroupText>{`{{${index}}}`}</InputGroupText>
+                <Input
+                  onChange={(e) => handleChange('email', index, e.target.value)}
+                />
+                <InputGroupText
+                  className='btn btn-danger'
+                  onClick={() => handleRemoveData('email', index)}
+                >
+                  <IoMdTrash />
+                </InputGroupText>
+              </InputGroup>
+            </div>
+          );
+        })}
       </Card>
     </div>
   );
 }
 
-export default Buttons;
+export default OptimizedButtons;
