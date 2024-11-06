@@ -18,7 +18,7 @@ function GenericSingleFieldForm() {
           name='userText'
           id='userText'
           onChange={CustomHandleChange}
-          // onChange={(e) => setUserText(e.target.value)} //without function we can handle data directly 
+          // onChange={(e) => setUserText(e.target.value)} //without function we can handle data directly
         />
         <button className='btn btn-primary'>submit</button>
       </form>

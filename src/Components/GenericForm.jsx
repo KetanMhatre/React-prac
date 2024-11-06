@@ -11,7 +11,7 @@ function GenericForm() {
     country: '',
   });
   const CustomHandleChange = (e) => {
-    // console.log(e.target.value);
+    console.log(e);
     const { name, value } = e.target;
     setUserText((previousData) => ({ ...previousData, [name]: value }));
   };

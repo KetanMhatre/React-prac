@@ -1,21 +1,40 @@
 import React, { useEffect, useState } from 'react';
 import { Card } from 'react-bootstrap';
+import { MdDelete } from 'react-icons/md';
 
 function LocalStorage() {
   const [text, setText] = useState('');
+  const [taskId, setTaskId] = useState(0);
   const [tasks, setTasks] = useState(
     () => JSON.parse(localStorage.getItem('task')) || []
   );
 
-  const handleChange = (e) => {
-    setText(e.target.value);
-  };
+  const [editText, setEditText] = useState('');
+  const [editIndex, setEditIndex] = useState(null);
 
   const addNewTask = () => {
     if (text.trim()) {
-      setTasks((prevTask) => [...prevTask, text]);
+      const data = { id: taskId, task: text };
+      setTasks((prevTask) => [...prevTask, data]);
       setText('');
     }
+    setTaskId(taskId + 1);
+  };
+
+  const handleSaveTask = (id) => {
+    if (editText.trim()) {
+      setTasks((tasks) =>
+        tasks.map((task) =>
+          task.id === id ? { ...task, task: editText } : task
+        )
+      );
+    }
+    setEditIndex(null);
+    setEditText('');
+  };
+
+  const handleTaskDelete = (id) => {
+    setTasks((tasks) => tasks.filter((task) => task.id !== id));
   };
 
   useEffect(() => {
@@ -33,7 +52,7 @@ function LocalStorage() {
             type='text'
             name='text'
             value={text}
-            onChange={handleChange}
+            onChange={(e) => setText(e.target.value)}
             style={{ height: '2.2rem', width: '400px' }}
           />
           <button
@@ -47,13 +66,56 @@ function LocalStorage() {
         <div>
           {tasks?.map((task, index) => {
             return (
-              <Card className='mt-3' key={index}>
-                <div>
-                  <p className='mb-0 p-2' style={{ fontSize: '1.3rem' }}>
-                    {task}
-                  </p>
-                </div>
-              </Card>
+              <div key={index} className='d-flex justify-content-between gap-2'>
+                <Card className='mt-3 flex-grow-1'>
+                  <div>
+                    <p className='mb-0 p-2' style={{ fontSize: '1.3rem' }}>
+                      {task.task}
+                    </p>
+                    {editIndex === task.id && (
+                      <input
+                        type='text'
+                        name='editText'
+                        value={editText}
+                        className='w-100 p-1 '
+                        onChange={(e) => setEditText(e.target.value)}
+                      />
+                    )}
+                  </div>
+                </Card>
+                {editIndex === null ? (
+                  <button
+                    className='btn btn-secondary px-4 mt-3 '
+                    onClick={() => {
+                      setEditIndex(editIndex !== task.id ? task.id : null);
+                    }}
+                  >
+                    edit
+                  </button>
+                ) : (
+                  <button
+                    className='btn btn-secondary px-4 mt-3'
+                    onClick={() => {
+                      handleSaveTask(task.id);
+                    }}
+                  >
+                    save
+                  </button>
+                )}
+                <button
+                  className='mt-3 px-2'
+                  style={{
+                    backgroundColor: 'red',
+                    border: 'none',
+                    borderRadius: '5px',
+                  }}
+                  onClick={() => {
+                    handleTaskDelete(task.id);
+                  }}
+                >
+                  <MdDelete className='fs-6' style={{ color: 'white' }} />
+                </button>
+              </div>
             );
           })}
         </div>
