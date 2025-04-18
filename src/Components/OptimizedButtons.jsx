@@ -52,6 +52,9 @@ function OptimizedButtons() {
     setClickCounts({ ...clickCounts, [type]: updatedData.length });
   };
 
+  const handleSubmit = () => {
+    console.log(replyData, phoneData, emailData);
+  };
   return (
     <div
       className='d-flex align-items-center justify-content-center'
@@ -139,6 +142,13 @@ function OptimizedButtons() {
             </div>
           );
         })}
+        <button
+          type='submit'
+          onClick={handleSubmit}
+          className='btn btn-primary'
+        >
+          Submit
+        </button>
       </Card>
     </div>
   );

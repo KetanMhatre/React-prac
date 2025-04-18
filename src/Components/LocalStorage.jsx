@@ -4,7 +4,6 @@ import { MdDelete } from 'react-icons/md';
 
 function LocalStorage() {
   const [text, setText] = useState('');
-  const [taskId, setTaskId] = useState(0);
   const [tasks, setTasks] = useState(
     () => JSON.parse(localStorage.getItem('task')) || []
   );
@@ -14,11 +13,11 @@ function LocalStorage() {
 
   const addNewTask = () => {
     if (text.trim()) {
-      const data = { id: taskId, task: text };
+      const newId = Date.now();
+      const data = { id: newId, task: text };
       setTasks((prevTask) => [...prevTask, data]);
       setText('');
     }
-    setTaskId(taskId + 1);
   };
 
   const handleSaveTask = (id) => {
@@ -83,16 +82,7 @@ function LocalStorage() {
                     )}
                   </div>
                 </Card>
-                {editIndex === null ? (
-                  <button
-                    className='btn btn-secondary px-4 mt-3 '
-                    onClick={() => {
-                      setEditIndex(editIndex !== task.id ? task.id : null);
-                    }}
-                  >
-                    edit
-                  </button>
-                ) : (
+                {editIndex === task.id ? (
                   <button
                     className='btn btn-secondary px-4 mt-3'
                     onClick={() => {
@@ -101,9 +91,18 @@ function LocalStorage() {
                   >
                     save
                   </button>
+                ) : (
+                  <button
+                    className='btn btn-secondary px-4 mt-3 '
+                    onClick={() => {
+                      setEditIndex(editIndex !== task.id ? task.id : null);
+                    }}
+                  >
+                    edit
+                  </button>
                 )}
                 <button
-                  className='mt-3 px-2'
+                  className='mt-3 px-3'
                   style={{
                     backgroundColor: 'red',
                     border: 'none',
@@ -113,7 +112,7 @@ function LocalStorage() {
                     handleTaskDelete(task.id);
                   }}
                 >
-                  <MdDelete className='fs-6' style={{ color: 'white' }} />
+                  <MdDelete className='fs-5' style={{ color: 'white' }} />
                 </button>
               </div>
             );

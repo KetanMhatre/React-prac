@@ -411,7 +411,7 @@ function WhatsappTemplates() {
                             </div>
                           ))}
                           <button
-                            className='btn btn-outline-primary w-25'
+                            className='btn btn-outline-primary '
                             onClick={() =>
                               handleAddInputField('websitesURL', 3)
                             }
@@ -439,7 +439,7 @@ function WhatsappTemplates() {
                             </div>
                           ))}
                           <button
-                            className='btn btn-outline-primary w-25'
+                            className='btn btn-outline-primary'
                             onClick={() =>
                               handleAddInputField('phoneNumbers', 2)
                             }
@@ -468,7 +468,7 @@ function WhatsappTemplates() {
                             </div>
                           ))}
                           <button
-                            className='btn btn-outline-primary w-25'
+                            className='btn btn-outline-primary'
                             onClick={() =>
                               handleAddInputField('quickReplies', 5)
                             }
